@@ -3,7 +3,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import url from 'node:url';
 
-const server = http.createServer(async function (req, res) {
+const createServer = () => http.createServer(async function (req, res) {
   // parse URL
   let parsedUrl = url.parse(req.url);
 
@@ -38,4 +38,4 @@ const server = http.createServer(async function (req, res) {
   }
 });
 
-export default server;
+export default createServer;

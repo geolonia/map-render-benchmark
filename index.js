@@ -1,6 +1,9 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import * as exec from '@actions/exec';
+import * as io from '@actions/io';
+
+import * as path from 'node:path';
 
 import Table from 'cli-table';
 
@@ -22,8 +25,11 @@ try {
 
   console.log(`style: ${style}\nproduction_style: ${productionStyle}\ncenter: ${center}\nzooms: ${zooms}`);
 
+  const styleFilename = path.basename(style);
+  await io.cp(path.join(process.env.GITHUB_WORKSPACE, style), path.join('.', 'docs', styleFilename));
+
   const results = await getMapRenderTimeByZoom(
-    style,
+    styleFilename,
     productionStyle,
     center,
     zooms,

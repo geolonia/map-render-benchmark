@@ -8,11 +8,10 @@ import {
 import * as fs from 'node:fs';
 import { promisify } from 'node:util';
 
-import server from './dev-server.js';
+import createServer from './dev-server.js';
 
 const AVERAGE_RUN_ITERATIONS = 5;
-const port = 9999;
-const threshold = 2000;
+const SERVER_PORT = 9999;
 
 const fetchLatestStyle = async () => {
   const out = 'docs/style-prod.json';
@@ -38,7 +37,7 @@ const getMapRenderTime = async (zoom, center, style) => {
   await page.evaluateOnNewDocument((style) => {
     window._geoloniaPerfStyle = `./${style}`;
   }, style);
-  await page.goto(`http://localhost:${port}/index.html#${zoom}/${lat}/${lng}`);
+  await page.goto(`http://localhost:${SERVER_PORT}/index.html#${zoom}/${lat}/${lng}`);
   await page.waitForSelector('.loading-geolonia-map', { hidden: true });
 
   const mapRenderTime = await page.evaluate(() => {
@@ -78,11 +77,11 @@ const getAverageMapRenderTime = async (zoom, center, loadStyle = 'style.json') =
   }
 };
 
-const getMapRenderTimeDiff = async (zoom, center) => {
-  const mapRenderedTime = await getAverageMapRenderTime(zoom, center);
+const getMapRenderTimeDiff = async (styleFilename, compareStyleUrl, zoom, center) => {
+  const mapRenderedTime = await getAverageMapRenderTime(zoom, center, styleFilename);
 
   // fetch style.json at master branch
-  await fetchLatestStyle();
+  await fetchLatestStyle(compareStyleUrl);
   const mapRenderedTimeProd = await getAverageMapRenderTime(zoom, center, 'style-prod.json');
 
   return {
@@ -93,17 +92,17 @@ const getMapRenderTimeDiff = async (zoom, center) => {
 }
 
 export const getMapRenderTimeByZoom = async (
-  stylePath,
+  styleFilename,
   compareStyleUrl,
   center,
   zoomList
 ) => {
+  const server = createServer();
   const httpTerminator = createHttpTerminator({
     server,
   });
-
   const serverListen = promisify(server.listen).bind(server);
-  await serverListen(port);
+  await serverListen(SERVER_PORT);
 
   // const center = [139.7671773, 35.6810755];
   // const zoomList = [ 5, 7, 11, 14 ];
@@ -118,13 +117,9 @@ export const getMapRenderTimeByZoom = async (
   for (let i = 0; i < zoomList.length; i++) {
 
     const zoom = zoomList[i];
-    const mapRenderedTime = await getMapRenderTimeDiff(zoom, center);
+    const mapRenderedTime = await getMapRenderTimeDiff(styleFilename, compareStyleUrl, zoom, center);
     const plusMinus = mapRenderedTime.diff > 0 ? '+' : '';
     // comment += `<tr><td>${zoom}</td><td>${plusMinus}${mapRenderedTime.diff/1000}秒</td><td>${mapRenderedTime.averageProd/1000}秒</td><td>${mapRenderedTime.average/1000}秒</td></tr>`;
-
-    if (parseInt(mapRenderedTime.diff) > threshold) {
-      throw new Error(`Map render average time changes should be less than ${threshold}ms.`);
-    }
 
     out.data.push({
       zoom: zoom,
