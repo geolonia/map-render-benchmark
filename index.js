@@ -5,7 +5,7 @@ import Table from 'cli-table';
 
 import {
   getMapRenderTimeByZoom
-} from './style-render-time.js';
+} from './src/style-render-time.js';
 
 try {
   // Get the JSON webhook payload for the event that triggered the workflow
