@@ -14,8 +14,8 @@ try {
 
   const style = core.getInput('style');
   const productionStyle = core.getInput('production_style');
-  const center = core.getInput('center');
-  const zooms = core.getInput('zooms');
+  const center = core.getInput('center').split(',').map(v => parseFloat(v));
+  const zooms = core.getInput('zooms').split(',').map(v => parseInt(v, 10));
 
   console.log(`style: ${style}\nproduction_style: ${productionStyle}\ncenter: ${center}\nzooms: ${zooms}`);
 

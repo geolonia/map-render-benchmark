@@ -13,6 +13,6 @@ jobs:
         uses: ./
         with:
           style: docs/style.json
-          center: [139.7671773, 35.6810755]
-          zooms: [ 5, 7, 11, 14 ]
+          center: 139.7671773,35.6810755
+          zooms: 5,7,11,14
           production_style: https://geoloniamaps.github.io/basic/style.json
