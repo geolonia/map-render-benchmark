@@ -1,2 +1,2 @@
-node_modules
+node_modules/puppeteer/.local-chromium
 docs/style-prod.json
