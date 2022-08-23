@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
+import * as exec from '@actions/exec';
 
 import Table from 'cli-table';
 
@@ -11,6 +12,8 @@ try {
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
   console.log(`The event payload: ${payload}`);
+
+  await exec.exec('yarn');
 
   const style = core.getInput('style');
   const productionStyle = core.getInput('production_style');
