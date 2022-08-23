@@ -1,0 +1,24 @@
+name: 'Map Render Benchmark'
+description: 'An action to benchmark the rendering speed of a MapLibreGL/MapboxGL web map. If the run is associated with a pull request, a comment will be added with the results of the comparison.'
+inputs:
+  style:
+    description: 'Path to the style.json file that will be benchmarked, relative to the repository root'
+    required: false
+    default: 'docs/style.json'
+  production_style:
+    description: 'URL of a style.json file that the current file will be compared against.'
+    required: true
+  center:
+    description: 'Longitude/latitude of the center of the map.'
+    required: true
+  zooms:
+    description: 'An array of zoom levels that will be tested.'
+    required: true
+  token:
+    description: "GitHub access token. Defaults to github.token."
+    required: false
+    default: ${{ github.token }}
+outputs: {} # none at this time
+runs:
+  using: 'node16'
+  main: 'index.js'

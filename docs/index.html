@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geolonia Map</title>
+  <style>
+    html,
+    body,
+    .mapContainer {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script>
+    window._geoloniaPerf = {};
+  </script>
+</head>
+<body>
+
+  <div
+    id="map"
+    class="mapContainer"
+    data-hash="on"
+    data-marker="off"
+  ></div>
+
+  <script src="https://cdn.geolonia.com/v1/embed?geolonia-api-key=YOUR-API-KEY"></script>
+  <script>
+    performance.mark('before_map_init');
+    const loadedStyle = window._geoloniaPerfStyle || "./style.json";
+    const map = new geolonia.Map({
+      container: "#map",
+      style: loadedStyle,
+    });
+    performance.mark('after_map_init');
+
+    map.on('load', () => {
+      performance.mark('after_map_load');
+
+      // 地図のレンダリングの時間を計測
+      // puppeteerで取得する為に グローバル変数に格納
+      window._geoloniaPerf.map_init = performance.measure('map_init', 'before_map_init', 'after_map_init').duration;
+      window._geoloniaPerf.map_load = performance.measure('map_load', 'after_map_init', 'after_map_load').duration;
+      window._geoloniaPerf.style = loadedStyle;
+
+      console.log(`Geolonia Embed API init time: ${window._geoloniaPerf.map_init}ms`);
+      console.log(`Map rendered time: ${window._geoloniaPerf.map_load}ms`);
+    });
+  </script>
+</body>
+
+</html>
