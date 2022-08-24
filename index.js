@@ -26,7 +26,9 @@ try {
   console.log(`style: ${style}\nproduction_style: ${productionStyle}\ncenter: ${center}\nzooms: ${zooms}`);
 
   const styleFilename = path.basename(style);
-  await io.cp(path.join(process.env.GITHUB_WORKSPACE, style), path.join('.', 'docs', styleFilename));
+
+  await io.cp(path.join('.', 'docs'), path.join('.', 'tmp'), { recursive: true, force: true });
+  await io.cp(path.join(process.env.GITHUB_WORKSPACE, style), path.join('.', 'tmp', styleFilename));
 
   const results = await getMapRenderTimeByZoom(
     styleFilename,

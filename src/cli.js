@@ -1,11 +1,15 @@
 import {
   getMapRenderTimeByZoom
 } from './style-render-time.js';
+import path from 'node:path';
+import * as io from '@actions/io';
 import Table from 'cli-table';
 
 const main = async () => {
+  await io.cp(path.join('.', 'docs'), path.join('.', 'tmp'), { recursive: true, force: true });
+
   const results = await getMapRenderTimeByZoom(
-    './docs/style.json',
+    'style.json',
     'https://geoloniamaps.github.io/basic/style.json',
     [139.7671773, 35.6810755],
     [ 5, 7, 11, 14 ],

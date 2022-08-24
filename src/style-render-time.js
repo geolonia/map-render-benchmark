@@ -6,6 +6,7 @@ import {
 
 
 import * as fs from 'node:fs';
+import path from 'node:path';
 import { promisify } from 'node:util';
 
 import createServer from './dev-server.js';
@@ -14,13 +15,13 @@ const AVERAGE_RUN_ITERATIONS = 5;
 const SERVER_PORT = 9999;
 
 const fetchLatestStyle = async () => {
-  const out = 'docs/style-prod.json';
+  const out = path.join('.', 'tmp', 'style-prod.json');
   if (fs.existsSync(out)) {
     return;
   }
   const response = await fetch('https://geoloniamaps.github.io/basic/style.json');
   const text = await response.text();
-  await fs.promises.writeFile('docs/style-prod.json', text);
+  await fs.promises.writeFile(out, text);
 }
 
 const getMapRenderTime = async (zoom, center, style) => {
