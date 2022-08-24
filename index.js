@@ -13,8 +13,8 @@ import {
 
 try {
   // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
+  // const payload = JSON.stringify(github.context.payload, undefined, 2)
+  // console.log(`The event payload: ${payload}`);
 
   await exec.exec('yarn');
 
@@ -52,6 +52,17 @@ try {
     avgProd,
   ]));
   console.log(table.toString());
+
+  // if this is a pull request, update the PR comment with the table
+  if (github.context.payload.pull_request) {
+    const prNumber = github.context.payload.pull_request.number;
+    const prComment = await github.issues.createComment({
+      ...github.context.repo,
+      issue_number: prNumber,
+      body: table.toString(),
+    });
+    console.log(`Created PR comment: ${prComment.data.html_url}`);
+  }
 } catch (error) {
   core.setFailed(error.message);
 }
