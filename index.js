@@ -68,7 +68,15 @@ try {
 
     let comment = '<h3><span aria-hidden="true">✅&nbsp;</span>Style Rendering Time</h3>';
     comment += `<table><tr>${head.map(title => `<th>${title}</th>`).join('')}</tr>`;
-    comment += results.data.map(({ zoom, diff, avg, avgProd }) => `<tr><td>${zoom}</td><td>${diff}</td><td>${avg}</td><td>${avgProd}</td></tr>`).join('');
+    comment += results.data.map(({ zoom, diff, avg, avgProd, statistics, statisticsProd, significantDifference }) => `<tr>
+      <td>${zoom}</td>
+      <td>${diff}</td>
+      <td>${avg}</td>
+      <td>${avgProd}</td>
+      <td>${statistics}</td>
+      <td>${statisticsProd}</td>
+      <td>${significantDifference}</td>
+    </tr>`).join('');
     comment += '</table>';
 
     const prNumber = github.context.payload.pull_request.number;
