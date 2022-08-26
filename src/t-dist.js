@@ -61,10 +61,28 @@ const twoSideTValueTable = rows.reduce((prev, row) => {
   return prev
 }, {})
 
+/**
+ *
+ * @param {number} df degrees of freedom
+ * @param {number} level of significance. 0.50, .20, .10, .05, .02, .01, .005, .002, .001, .0005, .0002 or .0001
+ * @param {number} t value
+ * @returns
+ */
 export const rejectNullHypothesis = (df, significancyLevel, tValue) => {
-  let table = twoSideTValueTable[df]
-  if(!table) {
-    table = twoSideTValueTable.Infinity
+
+  const dfOptions = Object.keys(twoSideTValueTable).map(key => key === 'Infinity' ? Infinity : parseInt(key, 10))
+
+  let dfKey = dfOptions[0]
+  while (dfOptions.length > 0) {
+    const next = dfOptions.shift()
+    console.log({df, next})
+    if(df <= next) {
+      break
+    } else {
+      dfKey = next
+    }
   }
+
+  const table = twoSideTValueTable[dfKey]
   return Math.abs(tValue) > table[significancyLevel]
 }
