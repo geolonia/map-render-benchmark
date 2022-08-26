@@ -44,15 +44,21 @@ try {
     'Diff',
     'Average',
     'Average (Production)',
+    'Statistics',
+    'Statistics(Production)',
+    'Significant Difference',
   ];
   const table = new Table({
     head,
   });
-  table.push(...results.data.map(({ zoom, diff, avg, avgProd }) => [
+  table.push(...results.data.map(({ zoom, diff, avg, avgProd, statistics, statisticsProd, significantDifference }) => [
     zoom,
     diff,
     avg,
     avgProd,
+    statistics,
+    statisticsProd,
+    significantDifference,
   ]));
   console.log(table.toString());
 

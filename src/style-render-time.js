@@ -98,14 +98,17 @@ const getMapRenderTimeDiff = async (styleFilename, compareStyleUrl, runIteration
 
   const tValue = ss.tTestTwoSample(mapRenderedTime.data, mapRenderedTimeProd.data, 0)
   const df = mapRenderedTime.data.length + mapRenderedTimeProd.data.length - 2
-
   const significantDifference = rejectZeroAverageHypothesis(df, 0.01, tValue) ? 0.01 : rejectZeroAverageHypothesis(df, 0.05, tValue) ? 0.05 : null
 
   return {
     diff: mapRenderedTime.average - mapRenderedTimeProd.average,
     significantDifference,
     average: mapRenderedTime.average,
+    sd: mapRenderedTime.sd,
     averageProd: mapRenderedTimeProd.average,
+    sdProd: mapRenderedTimeProd.sd,
+    sampleLength: mapRenderedTime.data.length,
+    sampleLengthProd: mapRenderedTimeProd.data.length,
   }
 }
 
@@ -138,11 +141,16 @@ export const getMapRenderTimeByZoom = async (
     );
     const plusMinus = mapRenderedTime.diff > 0 ? '+' : '';
 
+    const statisticsProd = `${mapRenderedTime.averageProd/1000}±${mapRenderedTime.sdProd/1000} (n=${mapRenderedTime.sampleLengthProd})`
+    const statistics = `${mapRenderedTime.average/1000}±${mapRenderedTime.sd/1000} (n=${mapRenderedTime.sampleLength})`
+
     out.data.push({
       zoom: zoom,
       diff: `${plusMinus}${mapRenderedTime.diff/1000}`,
       avgProd: `${mapRenderedTime.averageProd/1000}`,
       avg: `${mapRenderedTime.average/1000}`,
+      statisticsProd,
+      statistics,
       significantDifference,
     });
   }
