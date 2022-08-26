@@ -62,7 +62,7 @@ const twoSideTValueTable = rows.reduce((prev, row) => {
 }, {})
 
 /**
- *
+ * Search t-distribution table and examine null hypothesis rejection
  * @param {number} df degrees of freedom
  * @param {number} level of significance. 0.50, .20, .10, .05, .02, .01, .005, .002, .001, .0005, .0002 or .0001
  * @param {number} t value
