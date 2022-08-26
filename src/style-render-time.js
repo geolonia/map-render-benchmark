@@ -81,7 +81,7 @@ const getAverageMapRenderTime = async (zoom, center, runIterations, loadStyle = 
     min: Math.round(min),
     max: Math.round(max),
     sd,
-    data,
+    data: mapRenderedTimes,
   }
 };
 
