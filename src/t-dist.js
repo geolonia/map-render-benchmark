@@ -76,7 +76,6 @@ export const rejectNullHypothesis = (df, significancyLevel, tValue) => {
   let dfKey = dfOptions[0]
   while (dfOptions.length > 0) {
     const next = dfOptions.shift()
-    console.log({df, next})
     if(df <= next) {
       break
     } else {
