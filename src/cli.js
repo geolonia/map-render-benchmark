@@ -5,7 +5,12 @@ import path from 'node:path';
 import * as io from '@actions/io';
 import Table from 'cli-table';
 
+import { downloadBrowser } from 'puppeteer/lib/esm/puppeteer/node/install.js';
+
+
 const main = async () => {
+  await downloadBrowser();
+
   await io.cp(path.join('.', 'docs'), path.join('.', 'tmp'), { recursive: true, force: true });
 
   const results = await getMapRenderTimeByZoom(

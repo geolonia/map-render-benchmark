@@ -3,6 +3,8 @@ import * as github from '@actions/github';
 import * as exec from '@actions/exec';
 import * as io from '@actions/io';
 
+import { downloadBrowser } from 'puppeteer/lib/esm/puppeteer/node/install.js';
+
 import * as path from 'node:path';
 
 import Table from 'cli-table';
@@ -12,11 +14,7 @@ import {
 } from './src/style-render-time.js';
 
 try {
-  // Get the JSON webhook payload for the event that triggered the workflow
-  // const payload = JSON.stringify(github.context.payload, undefined, 2)
-  // console.log(`The event payload: ${payload}`);
-
-  await exec.exec('yarn');
+  await downloadBrowser();
 
   const style = core.getInput('style');
   const productionStyle = core.getInput('production_style');
