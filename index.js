@@ -6,9 +6,11 @@ import * as io from '@actions/io';
 import { downloadBrowser } from 'puppeteer/lib/esm/puppeteer/node/install.js';
 
 import * as path from 'node:path';
+import * as process from 'node:process';
 
 import Table from 'cli-table';
 
+import { rootPath, serveDirectory } from './src/utils.js';
 import {
   getMapRenderTimeByZoom
 } from './src/style-render-time.js';
@@ -25,8 +27,8 @@ try {
 
   const styleFilename = path.basename(style);
 
-  await io.cp(path.join(process.env.GITHUB_ACTION_PATH, 'docs'), path.join(process.env.GITHUB_ACTION_PATH, 'tmp'), { recursive: true, force: true });
-  await io.cp(path.join(process.env.GITHUB_WORKSPACE, style), path.join(process.env.GITHUB_ACTION_PATH, 'tmp', styleFilename));
+  await io.cp(path.join(rootPath(), 'docs'), serveDirectory(), { recursive: true, force: true });
+  await io.cp(path.join(process.env.GITHUB_WORKSPACE, style), path.join(serveDirectory(), styleFilename));
 
   const results = await getMapRenderTimeByZoom(
     styleFilename,

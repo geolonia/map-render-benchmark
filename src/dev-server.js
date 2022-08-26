@@ -3,12 +3,14 @@ import path from 'node:path';
 import fs from 'node:fs';
 import url from 'node:url';
 
+import { serveDirectory } from './utils.js';
+
 const createServer = () => http.createServer(async function (req, res) {
   // parse URL
   let parsedUrl = url.parse(req.url);
 
   // extract URL path
-  let pathname = path.join(process.env.GITHUB_ACTION_PATH || '.', 'tmp', parsedUrl.pathname);
+  let pathname = path.join(serveDirectory(), parsedUrl.pathname);
   // based on the URL path, extract the file extension. e.g. .js, .doc, ...
   const ext = path.parse(pathname).ext;
   // maps file extension to MIME type

@@ -6,12 +6,12 @@ import * as io from '@actions/io';
 import Table from 'cli-table';
 
 import { downloadBrowser } from 'puppeteer/lib/esm/puppeteer/node/install.js';
-
+import { rootPath, serveDirectory } from './utils.js';
 
 const main = async () => {
   await downloadBrowser();
 
-  await io.cp(path.join('.', 'docs'), path.join('.', 'tmp'), { recursive: true, force: true });
+  await io.cp(path.join(rootPath(), 'docs'), serveDirectory(), { recursive: true, force: true });
 
   const results = await getMapRenderTimeByZoom(
     'style.json',
