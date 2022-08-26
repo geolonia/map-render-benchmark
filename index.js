@@ -25,8 +25,8 @@ try {
 
   const styleFilename = path.basename(style);
 
-  await io.cp(path.join('.', 'docs'), path.join('.', 'tmp'), { recursive: true, force: true });
-  await io.cp(path.join(process.env.GITHUB_WORKSPACE, style), path.join('.', 'tmp', styleFilename));
+  await io.cp(path.join(process.env.GITHUB_ACTION_PATH, 'docs'), path.join(process.env.GITHUB_ACTION_PATH, 'tmp'), { recursive: true, force: true });
+  await io.cp(path.join(process.env.GITHUB_WORKSPACE, style), path.join(process.env.GITHUB_ACTION_PATH, 'tmp', styleFilename));
 
   const results = await getMapRenderTimeByZoom(
     styleFilename,

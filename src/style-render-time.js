@@ -15,7 +15,7 @@ const AVERAGE_RUN_ITERATIONS = 5;
 const SERVER_PORT = 9999;
 
 const fetchLatestStyle = async () => {
-  const out = path.join('.', 'tmp', 'style-prod.json');
+  const out = path.join(process.env.GITHUB_ACTION_PATH || '.', 'tmp', 'style-prod.json');
   if (fs.existsSync(out)) {
     return;
   }

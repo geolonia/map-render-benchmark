@@ -8,7 +8,7 @@ const createServer = () => http.createServer(async function (req, res) {
   let parsedUrl = url.parse(req.url);
 
   // extract URL path
-  let pathname = path.join('tmp', parsedUrl.pathname);
+  let pathname = path.join(process.env.GITHUB_ACTION_PATH || '.', 'tmp', parsedUrl.pathname);
   // based on the URL path, extract the file extension. e.g. .js, .doc, ...
   const ext = path.parse(pathname).ext;
   // maps file extension to MIME type
