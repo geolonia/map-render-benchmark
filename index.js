@@ -39,21 +39,17 @@ try {
     zooms,
   );
 
-  const table = new Table({
-    head: [
-      'Zoom',
-      'Diff',
-      'Average',
-      'Average (Production)',
-    ],
-  });
-  table.push(...results.data.map(({ zoom, diff, avg, avgProd }) => [
-    zoom,
-    diff,
-    avg,
-    avgProd,
-  ]));
-  console.log(table.toString());
+  const head = [
+    'Zoom',
+    'Diff',
+    'Average',
+    'Average (Production)',
+  ];
+
+  let comment = '<h3><span aria-hidden="true">✅&nbsp;</span>Style Rendering Time</h3>';
+  comment += `<table><tr>${head.map(title => `<th>${title}</th>`).join('')}</tr>`;
+  comment += results.data.map(({ zoom, diff, avg, avgProd }) => `<tr><td>${zoom}</td><td>${diff}</td><td>${avg}</td><td>${avgProd}</td></tr>`).join('');
+  comment += '</table>';
 
   const octokit = github.getOctokit(core.getInput('token'));
   // if this is a pull request, update the PR comment with the table
@@ -62,7 +58,7 @@ try {
     const prComment = await octokit.rest.issues.createComment({
       ...github.context.repo,
       issue_number: prNumber,
-      body: table.toString(),
+      body: comment,
     });
     console.log(`Created PR comment: ${prComment.data.html_url}`);
   }
