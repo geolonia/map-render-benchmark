@@ -46,30 +46,10 @@ try {
     'Average (Production)',
   ];
 
-  let table;
-
-  if (process.env.CI) {
-
-    table = `<table><tr>${head.map(title => `<th>${title}</th>`)}</tr>`;
-    table += results.data.map(({ zoom, diff, avg, avgProd }) => `<tr><td>${zoom}</td><td>${diff}</td><td>${avg}</td><td>${avgProd}</td></tr>`).join('');
-    table += '</table>';
-
-  } else {
-
-    table = new Table({
-      head,
-    });
-    table.push(...results.data.map(({ zoom, diff, avg, avgProd }) => [
-      zoom,
-      diff,
-      avg,
-      avgProd,
-    ]));
-    table.toString()
-  }
-
-  console.log(table);
-  console.log(process.env.CI)
+  let comment = '<h3><span aria-hidden="true">✅</span>Style Rendering Time</h3>';
+  comment += `<table><tr>${head.map(title => `<th>${title}</th>`).join('')}</tr>`;
+  comment += results.data.map(({ zoom, diff, avg, avgProd }) => `<tr><td>${zoom}</td><td>${diff}</td><td>${avg}</td><td>${avgProd}</td></tr>`).join('');
+  comment += '</table>';
 
   const octokit = github.getOctokit(core.getInput('token'));
   // if this is a pull request, update the PR comment with the table
@@ -78,7 +58,7 @@ try {
     const prComment = await octokit.rest.issues.createComment({
       ...github.context.repo,
       issue_number: prNumber,
-      body: table,
+      body: comment,
     });
     console.log(`Created PR comment: ${prComment.data.html_url}`);
   }
