@@ -1,3 +1,4 @@
+// I think it's not a bad idea to memoize the T-distribution since it's so hard to calculate it.
 const twoSideTValueTableRaw = `null,.50,.20,.10,.05,.02,.01,.005,.002,.001,.0005,.0002,.0001
 1,1.00,3.08,6.31,12.71,31.82,63.66,127.32,318.31,636.62,1273.24,3183.10,6366.20
 2,.82,1.89,2.92,4.30,6.96,9.22,14.09,22.33,31.60,44.70,70.70,99.99
@@ -62,7 +63,7 @@ const twoSideTValueTable = rows.reduce((prev, row) => {
 }, {})
 
 /**
- * Search t-distribution table and examine null hypothesis rejection
+ * Search the T-distribution table to determine the significance level
  * @param {number} df degrees of freedom
  * @param {number} level of significance. 0.50, .20, .10, .05, .02, .01, .005, .002, .001, .0005, .0002 or .0001
  * @param {number} t value
