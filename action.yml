@@ -14,6 +14,10 @@ inputs:
   zooms:
     description: 'An array of zoom levels that will be tested.'
     required: true
+  run_iterations:
+    description: 'How many times the test should be run for each iteration.'
+    required: false
+    default: 5
   token:
     description: "GitHub access token. Defaults to github.token."
     required: false

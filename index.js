@@ -22,8 +22,9 @@ try {
   const productionStyle = core.getInput('production_style');
   const center = core.getInput('center').split(',').map(v => parseFloat(v));
   const zooms = core.getInput('zooms').split(',').map(v => parseInt(v, 10));
+  const runIterations = parseInt(core.getInput('run_iterations') || 2, 10);
 
-  console.log(`style: ${style}\nproduction_style: ${productionStyle}\ncenter: ${center}\nzooms: ${zooms}`);
+  console.log(`style: ${style}\nproduction_style: ${productionStyle}\ncenter: ${center}\nzooms: ${zooms}\nrun_iterations: ${runIterations}`);
 
   const styleFilename = path.basename(style);
 
@@ -33,6 +34,7 @@ try {
   const results = await getMapRenderTimeByZoom(
     styleFilename,
     productionStyle,
+    runIterations,
     center,
     zooms,
   );
@@ -53,10 +55,11 @@ try {
   ]));
   console.log(table.toString());
 
+  const octokit = github.getOctokit(core.getInput('token'));
   // if this is a pull request, update the PR comment with the table
   if (github.context.payload.pull_request) {
     const prNumber = github.context.payload.pull_request.number;
-    const prComment = await github.issues.createComment({
+    const prComment = await octokit.rest.issues.createComment({
       ...github.context.repo,
       issue_number: prNumber,
       body: table.toString(),

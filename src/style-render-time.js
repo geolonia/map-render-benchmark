@@ -12,7 +12,6 @@ import { promisify } from 'node:util';
 import createServer from './dev-server.js';
 import { serveDirectory } from './utils.js';
 
-const AVERAGE_RUN_ITERATIONS = 5;
 const SERVER_PORT = 9999;
 
 const fetchLatestStyle = async (url) => {
@@ -51,12 +50,12 @@ const getMapRenderTime = async (zoom, center, style) => {
   return mapRenderTime;
 }
 
-const getAverageMapRenderTime = async (zoom, center, loadStyle = 'style.json') => {
+const getAverageMapRenderTime = async (zoom, center, runIterations, loadStyle = 'style.json') => {
 
   const mapRenderedTimes = [];
 
   // 5回のレンダリング時間の平均を取得
-  for (let i = 0; i < AVERAGE_RUN_ITERATIONS; i++) {
+  for (let i = 0; i < runIterations; i++) {
     const {
       map_init,
       map_load,
@@ -79,12 +78,16 @@ const getAverageMapRenderTime = async (zoom, center, loadStyle = 'style.json') =
   }
 };
 
-const getMapRenderTimeDiff = async (styleFilename, compareStyleUrl, zoom, center) => {
-  const mapRenderedTime = await getAverageMapRenderTime(zoom, center, styleFilename);
+const getMapRenderTimeDiff = async (styleFilename, compareStyleUrl, runIterations, zoom, center) => {
+  const mapRenderedTime = await getAverageMapRenderTime(
+    zoom, center, runIterations, styleFilename
+  );
 
   // fetch style.json at master branch
   await fetchLatestStyle(compareStyleUrl);
-  const mapRenderedTimeProd = await getAverageMapRenderTime(zoom, center, 'style-prod.json');
+  const mapRenderedTimeProd = await getAverageMapRenderTime(
+    zoom, center, runIterations, 'style-prod.json'
+  );
 
   return {
     diff: mapRenderedTime.average - mapRenderedTimeProd.average,
@@ -96,6 +99,7 @@ const getMapRenderTimeDiff = async (styleFilename, compareStyleUrl, zoom, center
 export const getMapRenderTimeByZoom = async (
   styleFilename,
   compareStyleUrl,
+  runIterations,
   center,
   zoomList
 ) => {
@@ -119,7 +123,13 @@ export const getMapRenderTimeByZoom = async (
   for (let i = 0; i < zoomList.length; i++) {
 
     const zoom = zoomList[i];
-    const mapRenderedTime = await getMapRenderTimeDiff(styleFilename, compareStyleUrl, zoom, center);
+    const mapRenderedTime = await getMapRenderTimeDiff(
+      styleFilename,
+      compareStyleUrl,
+      runIterations,
+      zoom,
+      center
+    );
     const plusMinus = mapRenderedTime.diff > 0 ? '+' : '';
     // comment += `<tr><td>${zoom}</td><td>${plusMinus}${mapRenderedTime.diff/1000}秒</td><td>${mapRenderedTime.averageProd/1000}秒</td><td>${mapRenderedTime.average/1000}秒</td></tr>`;
 
