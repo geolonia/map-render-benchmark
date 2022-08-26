@@ -63,6 +63,7 @@ const twoSideTValueTable = rows.reduce((prev, row) => {
 
 export const rejectZeroAverageHypothesis = (df, significancyLevel, tValue) => {
   let table = twoSideTValueTable[df]
+  console.log({table, df})
   if(!table || df > 500) {
     table = twoSideTValueTable.Infinity
   } else {
