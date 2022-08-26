@@ -13,7 +13,7 @@ import createServer from './dev-server.js';
 import { serveDirectory } from './utils.js';
 
 import * as ss from 'simple-statistics'
-import { rejectZeroAverageHypothesis } from './t-dist'
+import { rejectZeroAverageHypothesis } from './t-dist.js'
 
 const SERVER_PORT = 9999;
 
@@ -123,13 +123,6 @@ export const getMapRenderTimeByZoom = async (
   const serverListen = promisify(server.listen).bind(server);
   await serverListen(SERVER_PORT);
 
-  // const center = [139.7671773, 35.6810755];
-  // const zoomList = [ 5, 7, 11, 14 ];
-
-  // let comment = '<h3><span aria-hidden="true">✅</span> 地図レンダリング時間</h3>';
-  // comment += `<p><code>master</code> ブランチのスタイルと、現在のブランチのスタイルのレンダリング時間を比較した結果を表示します。（レンダリング時間が${threshold/1000}秒以上増加した場合テストが失敗します）</p>`;
-  // comment += '<table><tr><th>ズームレベル</th><th>最新リリースとの差分</th><th>最新リリース</th><th>現在のブランチ</th></tr>';
-
   const out = {
     data: [],
   };
@@ -144,7 +137,6 @@ export const getMapRenderTimeByZoom = async (
       center
     );
     const plusMinus = mapRenderedTime.diff > 0 ? '+' : '';
-    // comment += `<tr><td>${zoom}</td><td>${plusMinus}${mapRenderedTime.diff/1000}秒</td><td>${mapRenderedTime.averageProd/1000}秒</td><td>${mapRenderedTime.average/1000}秒</td></tr>`;
 
     out.data.push({
       zoom: zoom,
@@ -154,10 +146,6 @@ export const getMapRenderTimeByZoom = async (
       significantDifference,
     });
   }
-
-  // comment += '</table>';
-
-  // process.stdout.write(comment);
 
   await httpTerminator.terminate();
 
