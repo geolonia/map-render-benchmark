@@ -14,12 +14,12 @@ import createServer from './dev-server.js';
 const AVERAGE_RUN_ITERATIONS = 5;
 const SERVER_PORT = 9999;
 
-const fetchLatestStyle = async () => {
+const fetchLatestStyle = async (url) => {
   const out = path.join(process.env.GITHUB_ACTION_PATH || '.', 'tmp', 'style-prod.json');
   if (fs.existsSync(out)) {
     return;
   }
-  const response = await fetch('https://geoloniamaps.github.io/basic/style.json');
+  const response = await fetch(url);
   const text = await response.text();
   await fs.promises.writeFile(out, text);
 }
