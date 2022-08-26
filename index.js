@@ -47,11 +47,12 @@ try {
       'Average (Production)',
     ],
   });
-  table.push(...results.data.map(({ zoom, diff, avg, avgProd }) => [
+  table.push(...results.data.map(({ zoom, diff, avg, avgProd, significancy }) => [
     zoom,
     diff,
     avg,
     avgProd,
+    significancy,
   ]));
   console.log(table.toString());
 

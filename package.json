@@ -12,6 +12,7 @@
     "cli-table": "^0.3.11",
     "http-terminator": "^3.2.0",
     "node-fetch": "^3.2.10",
-    "puppeteer": "^16.2.0"
+    "puppeteer": "^16.2.0",
+    "simple-statistics": "^7.7.6"
   }
 }
