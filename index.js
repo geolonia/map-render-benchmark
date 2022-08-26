@@ -50,6 +50,12 @@ try {
 
   if (process.env.CI) {
 
+    table = `<table><tr>${head.map(title => `<th>${title}</th>`)}</tr>`;
+    table += results.data.map(({ zoom, diff, avg, avgProd }) => `<tr><td>${zoom}</td><td>${diff}</td><td>${avg}</td><td>${avgProd}</td></tr>`).join('');
+    table += '</table>';
+
+  } else {
+
     table = new Table({
       head,
     });
@@ -59,11 +65,7 @@ try {
       avg,
       avgProd,
     ]));
-  } else {
-
-    table = `<table><tr>${head.map(title => `<th>${title}</th>`)}</tr>`;
-    table += results.data.map(({ zoom, diff, avg, avgProd }) => `<tr><td>${zoom}</td><td>${diff}</td><td>${avg}</td><td>${avgProd}</td></tr>`).join('');
-    table += '</table>';
+    table.toString()
   }
 
   console.log(table);
@@ -76,7 +78,7 @@ try {
     const prComment = await octokit.rest.issues.createComment({
       ...github.context.repo,
       issue_number: prNumber,
-      body: table.toString(),
+      body: table,
     });
     console.log(`Created PR comment: ${prComment.data.html_url}`);
   }
