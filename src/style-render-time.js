@@ -13,7 +13,7 @@ import createServer from './dev-server.js';
 import { serveDirectory } from './utils.js';
 
 import * as ss from 'simple-statistics'
-import { rejectZeroAverageHypothesis } from './t-dist.js'
+import { rejectNullHypothesis } from './t-dist.js'
 
 const SERVER_PORT = 9999;
 
@@ -98,7 +98,7 @@ const getMapRenderTimeDiff = async (styleFilename, compareStyleUrl, runIteration
 
   const tValue = ss.tTestTwoSample(mapRenderedTime.data, mapRenderedTimeProd.data, 0)
   const df = mapRenderedTime.data.length + mapRenderedTimeProd.data.length - 2
-  const significantDifference = rejectZeroAverageHypothesis(df, 0.01, tValue) ? 0.01 : rejectZeroAverageHypothesis(df, 0.05, tValue) ? 0.05 : null
+  const significantDifference = rejectNullHypothesis(df, 0.01, tValue) ? 0.01 : rejectNullHypothesis(df, 0.05, tValue) ? 0.05 : null
 
   return {
     diff: mapRenderedTime.average - mapRenderedTimeProd.average,
@@ -151,7 +151,7 @@ export const getMapRenderTimeByZoom = async (
       avg: `${mapRenderedTime.average/1000}`,
       statisticsProd,
       statistics,
-      significantDifference,
+      significantDifference: mapRenderedTime.significantDifference,
     });
   }
 

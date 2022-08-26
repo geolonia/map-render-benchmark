@@ -61,15 +61,10 @@ const twoSideTValueTable = rows.reduce((prev, row) => {
   return prev
 }, {})
 
-export const rejectZeroAverageHypothesis = (df, significancyLevel, tValue) => {
+export const rejectNullHypothesis = (df, significancyLevel, tValue) => {
   let table = twoSideTValueTable[df]
-  console.log({table, df})
   if(!table) {
     table = twoSideTValueTable.Infinity
-  }
-  if(!significancyLevels.contains(significancyLevel)) {
-    console.error('significancy level should be one of ' + significancyLevels.join(',') + '.')
-    process.exit(1)
   }
   return Math.abs(tValue) > table[significancyLevel]
 }
