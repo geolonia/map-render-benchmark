@@ -39,29 +39,32 @@ try {
     zooms,
   );
 
-  const table = new Table({
-    head: [
-      'Zoom',
-      'Diff',
-      'Average',
-      'Average (Production)',
-    ],
-  });
-  table.push(...results.data.map(({ zoom, diff, avg, avgProd }) => [
-    zoom,
-    diff,
-    avg,
-    avgProd,
-  ]));
+  const head = [
+    'Zoom',
+    'Diff',
+    'Average',
+    'Average (Production)',
+  ];
 
-  console.log("テスト------------------------------");
-  console.log(results)
+  let table;
 
-  // let comment = '<h3><span aria-hidden="true">✅</span> 地図レンダリング時間</h3>';
-  // comment += `<p><code>master</code> ブランチのスタイルと、現在のブランチのスタイルのレンダリング時間を比較した結果を表示します。（レンダリング時間が${threshold/1000}秒以上増加した場合テストが失敗します）</p>`;
-  // comment += '<table><tr><th>ズームレベル</th><th>最新リリースとの差分</th><th>最新リリース</th><th>現在のブランチ</th></tr>';
-  // comment += `<tr><td>${zoom}</td><td>${plusMinus}${mapRenderedTime.diff/1000}秒</td><td>${mapRenderedTime.averageProd/1000}秒</td><td>${mapRenderedTime.average/1000}秒</td></tr>`;
-  // comment += '</table>';
+  if (process.env.CI) {
+
+    table = new Table({
+      head,
+    });
+    table.push(...results.data.map(({ zoom, diff, avg, avgProd }) => [
+      zoom,
+      diff,
+      avg,
+      avgProd,
+    ]));
+  } else {
+
+    table = `<table><tr>${head.map(title => `<th>${title}</th>`)}</tr>`;
+    table += results.data.map(({ zoom, diff, avg, avgProd }) => `<tr><td>${zoom}</td><td>${diff}</td><td>${avg}</td><td>${avgProd}</td></tr>`).join('');
+    table += '</table>';
+  }
 
   const octokit = github.getOctokit(core.getInput('token'));
   // if this is a pull request, update the PR comment with the table
