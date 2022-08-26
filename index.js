@@ -66,6 +66,9 @@ try {
     table += '</table>';
   }
 
+  console.log(table);
+  console.log(process.env.CI)
+
   const octokit = github.getOctokit(core.getInput('token'));
   // if this is a pull request, update the PR comment with the table
   if (github.context.payload.pull_request) {
