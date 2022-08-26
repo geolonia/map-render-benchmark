@@ -45,8 +45,8 @@ try {
     'Average',
     'Average (Production)',
     'Statistics',
-    'Statistics(Production)',
-    'Significant Difference',
+    'Statistics (Production)',
+    'Level of Significance',
   ];
   const table = new Table({
     head,
