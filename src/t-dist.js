@@ -64,13 +64,12 @@ const twoSideTValueTable = rows.reduce((prev, row) => {
 export const rejectZeroAverageHypothesis = (df, significancyLevel, tValue) => {
   let table = twoSideTValueTable[df]
   console.log({table, df})
-  if(!table || df > 500) {
+  if(!table) {
     table = twoSideTValueTable.Infinity
-  } else {
-    throw new Error('Invalid degrees of freedom.')
   }
   if(!significancyLevels.contains(significancyLevel)) {
-    throw new Error('significancy level should be one of ' + significancyLevels.join(',') + '.')
+    console.error('significancy level should be one of ' + significancyLevels.join(',') + '.')
+    process.exit(1)
   }
   return Math.abs(tValue) > table[significancyLevel]
 }
