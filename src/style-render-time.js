@@ -71,7 +71,7 @@ const getAverageMapRenderTime = async (zoom, center, runIterations, loadStyle = 
   // get average map render time
   const average = mapRenderedTimes.reduce((a, b) => a + b, 0) / mapRenderedTimes.length;
   // get standard deviation map render time
-  const sd = ss.standardDeviation(mapRenderedTimes).toFixed(2);
+  const sd = ss.standardDeviation(mapRenderedTimes);
   // get min max map render time
   const min = Math.min(...mapRenderedTimes);
   const max = Math.max(...mapRenderedTimes);
@@ -80,7 +80,7 @@ const getAverageMapRenderTime = async (zoom, center, runIterations, loadStyle = 
     average: Math.round(average),
     min: Math.round(min),
     max: Math.round(max),
-    sd,
+    sd: Math.round(sd),
     data: mapRenderedTimes,
   }
 };
@@ -98,7 +98,7 @@ const getMapRenderTimeDiff = async (styleFilename, compareStyleUrl, runIteration
 
   const tValue = ss.tTestTwoSample(mapRenderedTime.data, mapRenderedTimeProd.data, 0)
   const df = mapRenderedTime.data.length + mapRenderedTimeProd.data.length - 2
-  const significantDifference = rejectNullHypothesis(df, 0.01, tValue) ? 0.01 : rejectNullHypothesis(df, 0.05, tValue) ? 0.05 : null
+  const significantDifference = rejectNullHypothesis(df, 0.01, tValue) ? 'p <= 0.01' : rejectNullHypothesis(df, 0.05, tValue) ? 'p <= 0.05' : 'p > 0.05'
 
   return {
     diff: mapRenderedTime.average - mapRenderedTimeProd.average,
@@ -141,8 +141,8 @@ export const getMapRenderTimeByZoom = async (
     );
     const plusMinus = mapRenderedTime.diff > 0 ? '+' : '';
 
-    const statisticsProd = `${mapRenderedTime.averageProd/1000}±${mapRenderedTime.sdProd/1000} (n=${mapRenderedTime.sampleLengthProd})`
-    const statistics = `${mapRenderedTime.average/1000}±${mapRenderedTime.sd/1000} (n=${mapRenderedTime.sampleLength})`
+    const statisticsProd = `${mapRenderedTime.averageProd/1000} ± ${mapRenderedTime.sdProd/1000} (n = ${mapRenderedTime.sampleLengthProd})`
+    const statistics = `${mapRenderedTime.average/1000} ± ${mapRenderedTime.sd/1000} (n = ${mapRenderedTime.sampleLength})`
 
     out.data.push({
       zoom: zoom,
