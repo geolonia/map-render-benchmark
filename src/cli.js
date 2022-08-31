@@ -23,8 +23,8 @@ const main = async () => {
     head: [
       'Zoom',
       'Diff',
-      'Average',
-      'Average (Production)',
+      'Mean',
+      'Mean (Production)',
     ],
   });
   table.push(...results.data.map(({ zoom, diff, avg, avgProd }) => [

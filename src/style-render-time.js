@@ -98,7 +98,7 @@ const getMapRenderTimeDiff = async (styleFilename, compareStyleUrl, runIteration
 
   const tValue = ss.tTestTwoSample(mapRenderedTime.data, mapRenderedTimeProd.data, 0)
   const df = mapRenderedTime.data.length + mapRenderedTimeProd.data.length - 2
-  const significantDifference = rejectNullHypothesis(df, 0.01, tValue) ? 'true (**)' : rejectNullHypothesis(df, 0.05, tValue) ? 'true (*)' : '-'
+  const significantDifference = rejectNullHypothesis(df, 0.05, tValue) ? 'True' : '-'
 
   return {
     diff: mapRenderedTime.average - mapRenderedTimeProd.average,

@@ -41,15 +41,15 @@ try {
 
   const head = [
     'Zoom',
-    'Diff',
-    'Average ± Standard Deviation (number of samples)',
-    'Average ± Standard Deviation (number of samples) (Production)',
+    'Difference in Means',
+    'Mean ± Standard Deviation [ms.]',
+    'Mean ± Standard Deviation [ms.] (Production)',
     'Significant Difference',
   ];
   const table = new Table({
     head,
   });
-  table.push(...results.data.map(({ zoom, diff, avg, avgProd, statistics, statisticsProd, significantDifference }) => [
+  table.push(...results.data.map(({ zoom, diff, statistics, statisticsProd, significantDifference }) => [
     zoom,
     diff,
     statistics,
@@ -72,8 +72,8 @@ try {
       <td>${significantDifference}</td>
     </tr>`).join('');
     comment += '</table>';
-    comment += `<p>The P value represents the probability that the difference in means between the two groups is not caused by chance due to sampling error, and a significance level of 5% is used here.</p>`;
-    comment += `<p><small>**: p&lt0.01</small>, <small>*: p&lt0.05</small></p>`
+    comment += `<p>n represents the number of samplings in each group.</p>`;
+    comment += `<p>The significant difference means the probability that the difference in means between the two groups is caused by coincidence due to sampling error, and 5% is used as the significance level.</p>`;
 
     const prNumber = github.context.payload.pull_request.number;
     const prComment = await octokit.rest.issues.createComment({
