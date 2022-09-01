@@ -41,9 +41,9 @@ try {
 
   const head = [
     'Zoom',
-    'Difference in Means',
-    'Mean ± Standard Deviation [ms.]',
-    'Mean ± Standard Deviation [ms.] (Production)',
+    'Difference in Means [sec.]',
+    'Mean ± Standard Deviation [sec.]',
+    'Mean ± Standard Deviation [sec.] (Production)',
     'Significant Difference',
   ];
   const table = new Table({
