@@ -12,6 +12,9 @@ import { promisify } from 'node:util';
 import createServer from './dev-server.js';
 import { serveDirectory } from './utils.js';
 
+import * as ss from 'simple-statistics'
+import { rejectNullHypothesis } from './t-dist.js'
+
 const SERVER_PORT = 9999;
 
 const fetchLatestStyle = async (url) => {
@@ -67,6 +70,8 @@ const getAverageMapRenderTime = async (zoom, center, runIterations, loadStyle = 
 
   // get average map render time
   const average = mapRenderedTimes.reduce((a, b) => a + b, 0) / mapRenderedTimes.length;
+  // get standard deviation map render time
+  const sd = ss.standardDeviation(mapRenderedTimes);
   // get min max map render time
   const min = Math.min(...mapRenderedTimes);
   const max = Math.max(...mapRenderedTimes);
@@ -75,6 +80,8 @@ const getAverageMapRenderTime = async (zoom, center, runIterations, loadStyle = 
     average: Math.round(average),
     min: Math.round(min),
     max: Math.round(max),
+    sd: Math.round(sd),
+    data: mapRenderedTimes,
   }
 };
 
@@ -89,10 +96,19 @@ const getMapRenderTimeDiff = async (styleFilename, compareStyleUrl, runIteration
     zoom, center, runIterations, 'style-prod.json'
   );
 
+  const tValue = ss.tTestTwoSample(mapRenderedTime.data, mapRenderedTimeProd.data, 0)
+  const df = mapRenderedTime.data.length + mapRenderedTimeProd.data.length - 2
+  const significantDifference = rejectNullHypothesis(df, 0.05, tValue) ? 'True' : '-'
+
   return {
     diff: mapRenderedTime.average - mapRenderedTimeProd.average,
+    significantDifference,
     average: mapRenderedTime.average,
+    sd: mapRenderedTime.sd,
     averageProd: mapRenderedTimeProd.average,
+    sdProd: mapRenderedTimeProd.sd,
+    sampleLength: mapRenderedTime.data.length,
+    sampleLengthProd: mapRenderedTimeProd.data.length,
   }
 }
 
@@ -125,11 +141,17 @@ export const getMapRenderTimeByZoom = async (
     );
     const plusMinus = mapRenderedTime.diff > 0 ? '+' : '';
 
+    const statisticsProd = `${mapRenderedTime.averageProd/1000} ± ${mapRenderedTime.sdProd/1000} (n = ${mapRenderedTime.sampleLengthProd})`
+    const statistics = `${mapRenderedTime.average/1000} ± ${mapRenderedTime.sd/1000} (n = ${mapRenderedTime.sampleLength})`
+
     out.data.push({
       zoom: zoom,
       diff: `${plusMinus}${mapRenderedTime.diff/1000}`,
       avgProd: `${mapRenderedTime.averageProd/1000}`,
       avg: `${mapRenderedTime.average/1000}`,
+      statisticsProd,
+      statistics,
+      significantDifference: mapRenderedTime.significantDifference,
     });
   }
 

@@ -41,18 +41,20 @@ try {
 
   const head = [
     'Zoom',
-    'Diff',
-    'Average',
-    'Average (Production)',
+    'Difference in Means [sec.]',
+    'Mean ± Standard Deviation [sec.]',
+    'Mean ± Standard Deviation [sec.] (Production)',
+    'Significant Difference',
   ];
   const table = new Table({
     head,
   });
-  table.push(...results.data.map(({ zoom, diff, avg, avgProd }) => [
+  table.push(...results.data.map(({ zoom, diff, statistics, statisticsProd, significantDifference }) => [
     zoom,
     diff,
-    avg,
-    avgProd,
+    statistics,
+    statisticsProd,
+    significantDifference,
   ]));
   console.log(table.toString());
 
@@ -62,8 +64,16 @@ try {
 
     let comment = '<h3><span aria-hidden="true">✅&nbsp;</span>Style Rendering Time</h3>';
     comment += `<table><tr>${head.map(title => `<th>${title}</th>`).join('')}</tr>`;
-    comment += results.data.map(({ zoom, diff, avg, avgProd }) => `<tr><td>${zoom}</td><td>${diff}</td><td>${avg}</td><td>${avgProd}</td></tr>`).join('');
+    comment += results.data.map(({ zoom, diff, statistics, statisticsProd, significantDifference }) => `<tr>
+      <td>${zoom}</td>
+      <td>${diff}</td>
+      <td>${statistics}</td>
+      <td>${statisticsProd}</td>
+      <td>${significantDifference}</td>
+    </tr>`).join('');
     comment += '</table>';
+    comment += `<p>n represents the number of samplings in each group.</p>`;
+    comment += `<p>The significant difference means the probability that the difference in means between the two groups is caused by coincidence due to sampling error, and 5% is used as the significance level.</p>`;
 
     const prNumber = github.context.payload.pull_request.number;
     const prComment = await octokit.rest.issues.createComment({
