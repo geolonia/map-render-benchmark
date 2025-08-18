@@ -1,4 +1,4 @@
-# マップレンダーベンチマーク
+# Map Render Benchmark
 
 MapLibreGL/MapboxGLを使ったWeb地図のレンダリング速度をベンチマークするためのGitHub Actionです。プルリクエストに関連付けられている場合、比較結果がコメントとして追加されます。
 
@@ -25,28 +25,3 @@ MapLibreGL/MapboxGLを使ったWeb地図のレンダリング速度をベンチ�
 - `zooms`: (必須) テストするズームレベルの配列。
 - `run_iterations`: (任意) 各テストの実行回数。デフォルトは `5` です。
 - `token`: (任意) GitHubアクセストークン。デフォルトは `${{ github.token }}` です。
-
-## CLIでの使い方
-
-このツールはローカルテスト用のCLIも提供しています。
-
-### インストール
-
-```bash
-git clone https://github.com/geolonia/map-render-benchmark.git
-cd map-render-benchmark
-yarn install
-# or npm install
-```
-
-### 実行
-
-```bash
-node src/cli.js
-```
-
-CLIはベンチマーク結果のテーブルを出力します。
-
-## ライセンス
-
-[MIT](./LICENSE)
