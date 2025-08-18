@@ -12,9 +12,9 @@ MapLibreGL/MapboxGLを使ったWeb地図のレンダリング速度をベンチ�
 - name: Map Render Benchmark
   uses: geolonia/map-render-benchmark@v1
   with:
-    production_style: 'https://geoloniamaps.github.io/basic/style.json'
-    center: '[139.7671773, 35.6810755]'
-    zooms: '[5, 7, 11, 14]'
+    production_style: https://geoloniamaps.github.io/basic/style.json
+    center: 139.7671773, 35.6810755
+    zooms: 5, 7, 11, 14
 ```
 
 ### 入力
