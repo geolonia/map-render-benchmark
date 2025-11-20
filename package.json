@@ -9,7 +9,6 @@
     "@actions/exec": "^1.1.1",
     "@actions/github": "^5.0.3",
     "@actions/io": "^1.1.2",
-    "@puppeteer/browsers": "^2.10.13",
     "cli-table": "^0.3.11",
     "http-terminator": "^3.2.0",
     "node-fetch": "^3.2.10",
