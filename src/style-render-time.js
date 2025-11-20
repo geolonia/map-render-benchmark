@@ -32,7 +32,6 @@ const getMapRenderTime = async (zoom, center, style) => {
   const browser = await puppeteer.launch({
     // uncomment to debug in-browser failures
     // headless: false,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();
 
